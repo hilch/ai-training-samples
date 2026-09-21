@@ -1,0 +1,12 @@
+id: as-project-connectivity
+name: AS Project Connectivity
+description: OPC UA server configuration, variable exposure, and access control for B&R Automation Studio connectivity features.
+tags: [as, automation-studio, opcua, connectivity, opc-ua-cs]
+items:
+  - path: skills/as-compile/SKILL.md
+    kind: skill
+  - path: instructions/as-project-opcua.instructions.md
+    kind: instruction
+display:
+  ordering: manual
+  show_badge: true

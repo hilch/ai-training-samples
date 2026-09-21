@@ -1,0 +1,12 @@
+id: as-project-visu
+name: AS Project Visualization
+description: mappView HMI development and visualization configuration for B&R Automation Studio.
+tags: [as, automation-studio, mappview, hmi, visualization]
+items:
+  - path: skills/as-compile/SKILL.md
+    kind: skill
+  - path: instructions/as-project-visu.instructions.md
+    kind: instruction
+display:
+  ordering: manual
+  show_badge: true

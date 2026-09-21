@@ -1,0 +1,607 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "configuration",
+            "type": "promptString",
+            "description": "Configuration name (leave empty for auto-detect, 'all' for all configurations)",
+            "default": ""
+        },
+        {
+            "id": "targetIP",
+            "type": "promptString",
+            "description": "Target IP address for transfer",
+            "default": "127.0.0.1"
+        },
+        {
+            "id": "showWarnings",
+            "type": "pickString",
+            "description": "Show warnings in output?",
+            "options": ["no", "yes"],
+            "default": "no"
+        },
+        {
+            "id": "libraryName",
+            "type": "promptString",
+            "description": "Library name to add (example: MTBasics)",
+            "default": "MTBasics"
+        },
+        {
+            "id": "minVersion",
+            "type": "promptString",
+            "description": "Minimum version (optional, leave empty for none)",
+            "default": ""
+        },
+        {
+            "id": "taskPath",
+            "type": "promptString",
+            "description": "Task path under Logical (example: Drive or Service/Sub)",
+            "default": "Drive"
+        },
+        {
+            "id": "taskName",
+            "type": "promptString",
+            "description": "Task name (max 10 chars)",
+            "default": "MyTask"
+        },
+        {
+            "id": "taskClass",
+            "type": "pickString",
+            "description": "Task class",
+            "options": ["1", "2", "3", "4", "5", "6", "7", "8"],
+            "default": "4"
+        },
+        {
+            "id": "hwModuleType",
+            "type": "promptString",
+            "description": "Hardware module type to add (example: 80VD100PD.C000-01)",
+            "default": ""
+        },
+        {
+            "id": "classificationKeyword",
+            "type": "promptString",
+            "description": "Classification keyword to search (example: PPC3100, AutomationPC, CPU)",
+            "default": ""
+        },
+        {
+            "id": "hwModuleVersion",
+            "type": "promptString",
+            "description": "Hardware module version (optional, leave empty for highest installed)",
+            "default": ""
+        },
+        {
+            "id": "hwTarget",
+            "type": "pickString",
+            "description": "I/O target generation for Get IO Mapping Config (leave empty to auto-derive from the active CPU)",
+            "options": ["", "SG3", "SG4", "SGC"],
+            "default": ""
+        },
+        {
+            "id": "resolveIncludes",
+            "type": "pickString",
+            "description": "Also resolve shared X2X bus-diagnostic channel fragments?",
+            "options": ["no", "yes"],
+            "default": "no"
+        },
+        {
+            "id": "tpName",
+            "type": "promptString",
+            "description": "Technology package (example: mappMotion, mapp6D, mappServices, mappControl, mappVision)",
+            "default": "mappMotion"
+        },
+        {
+            "id": "tpVersion",
+            "type": "promptString",
+            "description": "Technology package version (optional, leave empty for highest installed)",
+            "default": ""
+        },
+        {
+            "id": "fileEnding",
+            "type": "promptString",
+            "description": "Config file ending (example: .axis, .purevaxcfg, .mpalarmxcore)",
+            "default": ".axis"
+        },
+        {
+            "id": "parentElement",
+            "type": "promptString",
+            "description": "Parent element path (Root for whole config, or a /-delimited node-ID path)",
+            "default": "Root"
+        },
+        {
+            "id": "maxDepth",
+            "type": "promptString",
+            "description": "Levels to expand below the scope (1 = shallow list, -1 = unlimited; empty = default 1)",
+            "default": ""
+        }
+    ],
+    "tasks": [
+        {
+            "label": "AS: Build",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "Build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "as-build",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(error|warning)\\s+(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Build project with auto-detected AS version and configuration"
+        },
+        {
+            "label": "AS: Build All Configurations",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "Build",
+                "-Configuration", "all"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "as-build",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(error|warning)\\s+(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Build all configurations in the project"
+        },
+        {
+            "label": "AS: Rebuild",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "Rebuild"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "as-build",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(error|warning)\\s+(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Force complete rebuild of the project"
+        },
+        {
+            "label": "AS: Clean",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "Clean"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Clean all build artifacts (Temp, Binaries, Diagnosis)"
+        },
+        {
+            "label": "AS: Transfer",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "Transfer",
+                "-TargetIP", "127.0.0.1"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Transfer to localhost/ARsim (auto-generates PIL)"
+        },
+        {
+            "label": "AS: Build and Transfer",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "BuildAndTransfer",
+                "-TargetIP", "127.0.0.1"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "as-build",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(error|warning)\\s+(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Build and transfer to localhost/ARsim"
+        },
+        {
+            "label": "AS: Build (Interactive)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$cfg = '${input:configuration}'; $sw = '${input:showWarnings}'; $params = @{ProjectPath='${workspaceFolder}'; Action='Build'}; if($cfg){$params.Configuration=$cfg}; if($sw -eq 'yes'){$params.ShowWarnings=$true}; & '${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1' @params"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "as-build",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(error|warning)\\s+(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Build with prompts for configuration and optional warnings display"
+        },
+        {
+            "label": "AS: Transfer (Interactive)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1",
+                "-ProjectPath", "${workspaceFolder}",
+                "-Action", "Transfer",
+                "-TargetIP", "${input:targetIP}"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Transfer with prompt for target IP"
+        },
+        {
+            "label": "AS: Build and Transfer (Interactive)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$cfg = '${input:configuration}'; $sw = '${input:showWarnings}'; $params = @{ProjectPath='${workspaceFolder}'; Action='BuildAndTransfer'; TargetIP='${input:targetIP}'}; if($cfg){$params.Configuration=$cfg}; if($sw -eq 'yes'){$params.ShowWarnings=$true}; & '${workspaceFolder}/.github/skills/as-compile/scripts/invoke-as-build.ps1' @params"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "as-build",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(error|warning)\\s+(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Build and transfer with prompts for configuration, target IP, and optional warnings display"
+        },
+        {
+            "label": "AS Logical API: Add Library",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$min = '${input:minVersion}'; $params = @{ ProjectPath='${workspaceFolder}'; Action='AddLibrary'; LibraryName='${input:libraryName}' }; if($min){ $params.MinVersion = $min }; & '${workspaceFolder}/.github/skills/as-logical-api/scripts/use-as-logical-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Add a library to the project with optional minimum version constraint"
+        },
+        {
+            "label": "AS Logical API: Add ST Task",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "& '${workspaceFolder}/.github/skills/as-logical-api/scripts/use-as-logical-api.ps1' -ProjectPath '${workspaceFolder}' -Action AddSTTask -TaskPath '${input:taskPath}' -TaskName '${input:taskName}' -TaskClass ${input:taskClass}"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Create a new ST program task and register it in the project"
+        },
+        {
+            "label": "AS Logical API: Add AnsiC Task",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "& '${workspaceFolder}/.github/skills/as-logical-api/scripts/use-as-logical-api.ps1' -ProjectPath '${workspaceFolder}' -Action AddAnsiCTask -TaskPath '${input:taskPath}' -TaskName '${input:taskName}' -TaskClass ${input:taskClass}"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Create a new ANSI-C program task and register it in the project"
+        },
+        {
+            "label": "AS Physical HW API: Add HW Module",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$ver = '${input:hwModuleVersion}'; $params = @{ ProjectPath='${workspaceFolder}'; Action='AddHWModule'; HwModuleType='${input:hwModuleType}' }; if($ver){ $params.HwModuleVersion = $ver }; & '${workspaceFolder}/.github/skills/as-physical-hw-api/scripts/use-as-physical-hw-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Add a hardware module to Hardware.hw with optional version override"
+        },
+        {
+            "label": "AS Physical HW API: Search By Classification",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "& '${workspaceFolder}/.github/skills/as-physical-hw-api/scripts/use-as-physical-hw-api.ps1' -ProjectPath '${workspaceFolder}' -Action SearchByClassification -ClassificationKeyword '${input:classificationKeyword}'"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Search hardware modules by a keyword matched against the Classification Value tags (e.g. PPC3100, AutomationPC, CPU)"
+        },
+        {
+            "label": "AS Physical HW API: Get IO Mapping Config",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$ver = '${input:hwModuleVersion}'; $tgt = '${input:hwTarget}'; $ri = '${input:resolveIncludes}'; $params = @{ ProjectPath='${workspaceFolder}'; Action='GetIOMappingConfig'; HwModuleType='${input:hwModuleType}' }; if($ver){ $params.HwModuleVersion = $ver }; if($tgt){ $params.Target = $tgt }; if($ri -eq 'yes'){ $params.ResolveIncludes = $true }; & '${workspaceFolder}/.github/skills/as-physical-hw-api/scripts/use-as-physical-hw-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "List a module's permittable I/O channel mappings (name, data type, direction, description)"
+        },
+        {
+            "label": "AS Physical HW API: Get Module Properties",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$ver = '${input:hwModuleVersion}'; $tgt = '${input:hwTarget}'; $pe = '${input:parentElement}'; $md = '${input:maxDepth}'; $params = @{ ProjectPath='${workspaceFolder}'; Action='GetModuleProperties'; HwModuleType='${input:hwModuleType}' }; if($ver){ $params.HwModuleVersion = $ver }; if($tgt){ $params.Target = $tgt }; if($pe -and $pe -ne 'Root'){ $params.ParentElement = $pe }; if($md){ $params.MaxDepth = [int]$md }; & '${workspaceFolder}/.github/skills/as-physical-hw-api/scripts/use-as-physical-hw-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Browse permitted configuration properties of a hardware module (drill-down like as-tp-config-api)"
+        },
+        {
+            "label": "AS Physical HW API: Get Possible HW Connections",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$ver = '${input:hwModuleVersion}'; $params = @{ ProjectPath='${workspaceFolder}'; Action='GetPossibleHWConnections'; HwModuleType='${input:hwModuleType}' }; if($ver){ $params.HwModuleVersion = $ver }; & '${workspaceFolder}/.github/skills/as-physical-hw-api/scripts/use-as-physical-hw-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "List a module's connectors and routing options for Hardware.hw"
+        },
+        {
+            "label": "AS: Get Installed Versions",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/.github/skills/as-utility/scripts/get-as-installations.ps1"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "List all installed B&R Automation Studio versions from Windows registry"
+        },
+        {
+            "label": "AS TP Config API: Get Config Elements",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$ver = '${input:tpVersion}'; $pe = '${input:parentElement}'; $md = '${input:maxDepth}'; $params = @{ TechnologyPackage='${input:tpName}'; FileEnding='${input:fileEnding}'; Action='GetConfigElements'; ProjectPath='${workspaceFolder}' }; if($ver){ $params.TPVersion = $ver }; if($pe){ $params.ParentElement = $pe }; if($md){ $params.MaxDepth = [int]$md }; & '${workspaceFolder}/.github/skills/as-tp-config-api/scripts/use-as-tp-config-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "List allowed config elements for a technology-package file ending (live editor markup)"
+        },
+        {
+            "label": "AS TP Config API: List File Endings",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-Command",
+                "$ver = '${input:tpVersion}'; $params = @{ TechnologyPackage='${input:tpName}'; Action='ListFileEndings'; ProjectPath='${workspaceFolder}' }; if($ver){ $params.TPVersion = $ver }; & '${workspaceFolder}/.github/skills/as-tp-config-api/scripts/use-as-tp-config-api.ps1' @params"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "List all valid config file endings for a technology package + version"
+        }
+    ]
+}

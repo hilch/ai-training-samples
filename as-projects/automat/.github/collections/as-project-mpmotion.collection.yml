@@ -1,0 +1,10 @@
+id: as-project-mpmotion
+name: AS Project Motion
+description: Motion control and axis configuration using mappMotion technology package for B&R Automation Studio.
+tags: [as, automation-studio, mapmotion, motion-control, axis]
+items:
+  - path: skills/as-compile/SKILL.md
+    kind: skill
+display:
+  ordering: manual
+  show_badge: true

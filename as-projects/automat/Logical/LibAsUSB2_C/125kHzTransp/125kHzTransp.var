@@ -1,0 +1,18 @@
+(********************************************************************
+ * COPYRIGHT -- Bernecker + Rainer 
+ ********************************************************************
+ * Program: 125kHzTransp
+ * File: 125kHzTransp.var
+ * Author: Bernecker + Rainer
+ * Created: September 15, 2009
+ ********************************************************************
+ * Local variables of program 125kHzTransp
+ ********************************************************************)
+VAR
+	Transponder : Transponder_typ;
+END_VAR
+VAR CONSTANT
+	TRANSPONDER_PROLIFIC_VENDOR_ID : UINT := 16#067B;
+	TRANSPONDER_PROLIFIC_PRODUCT_ID : UINT := 16#2303;
+	TRANSPONDER_PROLIFIC_BCD : UINT := 16#0300;
+END_VAR

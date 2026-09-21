@@ -1,0 +1,12 @@
+id: as-project-mpservices
+name: AS Project Services
+description: Alarm management and service features using mappServices and mapp AlarmX technology packages for B&R Automation Studio.
+tags: [as, automation-studio, mapservices, mpservices, alarm-management, alarmx]
+items:
+  - path: skills/as-compile/SKILL.md
+    kind: skill
+  - path: instructions/as-project-mpalarmx.instructions.md
+    kind: instruction
+display:
+  ordering: manual
+  show_badge: true

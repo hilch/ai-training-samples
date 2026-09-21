@@ -1,0 +1,26 @@
+id: as-project-base
+name: AS Project Base
+description: Core AS project knowledge - IEC and ANSI C coding standards, hardware/physical configuration, and build automation for Automation Studio projects.
+tags: [as, automation-studio, structured-text, ansi-c, configuration]
+items:
+  - path: skills/as-compile/SKILL.md
+    kind: skill
+  - path: skills/as-logical-api/SKILL.md
+    kind: skill
+  - path: skills/as-physical-hw-api/SKILL.md
+    kind: skill
+  - path: skills/as-tp-config-api/SKILL.md
+    kind: skill
+  - path: skills/as-utility/SKILL.md
+    kind: skill
+  - path: instructions/as-project-code.instructions.md
+    kind: instruction
+  - path: instructions/as-project-code-ansic.instructions.md
+    kind: instruction
+  - path: instructions/as-project-config.instructions.md
+    kind: instruction
+  - path: agents/as-project.agent.md
+    kind: agent
+display:
+  ordering: manual
+  show_badge: true

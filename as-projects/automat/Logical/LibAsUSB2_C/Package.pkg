@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?AutomationStudio FileVersion="4.9"?>
+<Package xmlns="http://br-automation.co.at/AS/Package">
+  <Objects>
+    <Object Type="Program" Language="ANSIC" Description="Support of 5E9000.29 transponder reader">125kHzTransp</Object>
+  </Objects>
+  <Dependencies>
+    <Dependency ObjectName="asusb" />
+    <Dependency ObjectName="dvframe" />
+    <Dependency ObjectName="asstring" />
+  </Dependencies>
+</Package>

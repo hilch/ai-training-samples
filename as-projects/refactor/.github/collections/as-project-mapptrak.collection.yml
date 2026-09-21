@@ -1,0 +1,12 @@
+id: as-project-mapptrak
+name: AS Project mapptrak
+description: mapptrak control and configuration using mappMotion technology package for B&R Automation Studio.
+tags: [as, automation-studio, mapptrak, motion-control, shuttle]
+items:
+  - path: instructions/as-project-mapptrak.instructions.md
+    kind: instruction
+  - path: skills/as-compile/SKILL.md
+    kind: skill
+display:
+  ordering: manual
+  show_badge: true

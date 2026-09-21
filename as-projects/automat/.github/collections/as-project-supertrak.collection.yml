@@ -1,0 +1,10 @@
+id: as-project-supertrak
+name: AS Project SuperTrak
+description: SuperTrak configuration and programming for B&R Automation Studio.
+tags: [as, automation-studio, supertrak, stcom]
+items:
+  - path: instructions/as-project-supertrak.instructions.md
+    kind: instruction
+display:
+  ordering: manual
+  show_badge: true
