@@ -17,7 +17,7 @@ Erstelle einen KI- Prompt, der alle numerischen Werte durch 'sprechende' Konstan
 
 Leider ist dieses Projekt nicht lauffähig, da die ArSim in den SERV wechselt.
 Im Logger wird [25316 AR-RTK: EXCEPTION Floating point Fehler](https://help.br-automation.com/#/de/6/diagnostics_support%2Fsys_error%2Ffiles%2Fsyserror_br2000_25316.htm) als Fehlerursache angegeben.
-Finde das Problem mit dem KI- Agent.
+Finde das Problem mit Hilfe des KI- Agenten.
 
 ## AS6 - Project 'refactor'
 
