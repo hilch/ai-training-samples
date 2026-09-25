@@ -1,0 +1,97 @@
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+User: Das Package 'GrosserMurks' enthält C- Quellcode.
+Zeige *.c- Dateien, in denen Funktionen der Library math.h benutzt wurden, aber das #include dieser Library fehlt.
+
+
+GitHub Copilot: Updated todo list
+
+Ich prüfe gezielt das Package `GrosserMurks` auf C-Dateien: Hypothese ist, dass Aufrufe bekannter `math.h`-Funktionen ohne lokalen `#include <math.h>` vorkommen; ein schneller Gegencheck ist die direkte Gegenüberstellung von Includes und Funktionsaufrufen je Datei.
+
+Ran terminal command: Get-Content -Raw 'c:\Projects\github\ai-training-samples\as-projects\fpointerr\.github\instructions\as-project-code-ansic.instructions.md'
+
+Ran terminal command: Get-ChildItem -Path . -Directory -Recurse -Filter GrosserMurks | Select-Object -ExpandProperty FullName
+
+Ran terminal command: rg --files -g '*.c' | Select-String -Pattern 'GrosserMurks' | ForEach-Object { $_.Line }
+Completed with input: rg --files -g '*.c' | Select-String -Pattern 'GrosserMurks' | ForEach-Object { $_.Line }
+
+Das Quellpackage liegt unter `GrosserMurks`; `rg` ist in dieser Umgebung nicht verfügbar, daher ermittle ich die C-Dateien mit PowerShell und prüfe anschließend die tatsächlichen Aufrufe gegen die lokalen Includes.
+
+Ran terminal command: Get-Content -Raw 'c:\Users\DECHHIL\AppData\Roaming\Code\User\workspaceStorage\b6db16e50af1eb825ce896edba3589f7\GitHub.copilot-chat\chat-session-resources\64949434-1a0c-495d-99cf-1878aae5b739\call_StcXJnIyTx0Xh1aMeDvVvLYU__vscode-1787301967202\content.txt'
+
+Ran terminal command: Get-ChildItem -Path '.\Logical\GrosserMurks' -File -Recurse -Filter '*.c' | ForEach-Object { $_.FullName }
+
+Ran terminal command: Get-ChildItem -Path '.\Logical\GrosserMurks' -File -Recurse -Filter '*.c' | ForEach-Object { $matches = Select-String -Path $_.FullName -Pattern '\b(acos|acosh|asin|asinh|atan|atan2|atanh|ceil|cos|cosh|exp|exp2|expm1|fabs|fdim|floor|fma|fmax|fmin|fmod|frexp|hypot|ldexp|log|log10|log1p|log2|modf|nearbyint|nextafter|pow|remainder|remquo|rint|round|scalbn|sin|sinh|sqrt|tan|tanh|trunc)\s*\(' -AllMatches; if ($matches) { [PSCustomObject]@{ File=$_.FullName; HasMathInclude=[bool](Select-String -Path $_.FullName -Pattern '^\s*#\s*include\s*[<"]math\.h[>"]'); Calls=($matches.Matches.Value | Sort-Object -Unique) -join ', ' } } } | Format-Table -AutoSize | Out-String -Width 240
+
+Die erste Auswertung hat die ANSI-C-Regeln bestätigt, aber die Dateiliste wurde wegen der großen Ausgabe ausgelagert. Ich lese diese Ergebnisliste nun aus und werte die betroffenen Quellen zeilenweise aus, damit Makros oder Kommentare nicht als falsche Treffer erscheinen.
+
+Ran terminal command: Get-Content -Raw 'c:\Users\DECHHIL\AppData\Roaming\Code\User\workspaceStorage\b6db16e50af1eb825ce896edba3589f7\GitHub.copilot-chat\chat-session-resources\64949434-1a0c-495d-99cf-1878aae5b739\call_5NdcmX6YOjI1aCUqXNqma59M__vscode-1787301967206\content.txt'
+
+Ran terminal command: $mathFunctions = 'acos|acosh|asin|asinh|atan|atan2|atanh|ceil|cos|cosh|exp|exp2|expm1|fabs|fdim|floor|fma|fmax|fmin|fmod|frexp|hypot|ldexp|log|log10|log1p|log2|modf|nearbyint|nextafter|pow|remainder|remquo|rint|round|scalbn|sin|sinh|sqrt|tan|tanh|trunc'; Get-ChildItem -Path '.\Logical\GrosserMurks' -File -Recurse -Filter '*.c' | ForEach-Object { $content = Get-Content -Raw $_.FullName; $calls = [regex]::Matches($content, "(?m)\b($mathFunctions)\s*\(") | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique; if ($calls.Count -gt 0 -and $content -notmatch '(?m)^\s*#\s*include\s*[<"]math\.h[>"]') { "{0}`n  functions: {1}" -f $_.FullName, ($calls -join ', ') } }
+
+Die direkte Prüfung liefert bislang keinen Kandidaten: Keine C-Datei mit erkanntem Standard-`math.h`-Funktionsaufruf fehlt das Include. Ich mache noch einen kompakten Zählcheck, um auszuschließen, dass das Package keine oder anders abgelegte C-Quellen enthält.
+
+Ran terminal command: $files = @(Get-ChildItem -Path '.\Logical\GrosserMurks' -File -Recurse -Filter '*.c'); $mathFunctions = 'acos|acosh|asin|asinh|atan|atan2|atanh|ceil|cos|cosh|exp|exp2|expm1|fabs|fdim|floor|fma|fmax|fmin|fmod|frexp|hypot|ldexp|log|log10|log1p|log2|modf|nearbyint|nextafter|pow|remainder|remquo|rint|round|scalbn|sin|sinh|sqrt|tan|tanh|trunc'; $withCalls = @($files | Where-Object { (Get-Content -Raw $_.FullName) -match "(?m)\b($mathFunctions)\s*\(" }); $missingIncludes = @($withCalls | Where-Object { (Get-Content -Raw $_.FullName) -notmatch '(?m)^\s*#\s*include\s*[<"]math\.h[>"]' }); [PSCustomObject]@{ CFiles=$files.Count; FilesWithMathCalls=$withCalls.Count; FilesMissingMathInclude=$missingIncludes.Count } | Format-List | Out-String
+
+Keine.
+
+Im Package `GrosserMurks` gibt es 103 `*.c`-Dateien, aber keine davon verwendet eine erkannte Standardfunktion aus `math.h`. Daher existiert auch keine Datei mit fehlendem `#include <math.h>`.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+User: das ist falsch. 
+- in 'murks_func001.c' wird cosf() verwendet
+
+GitHub Copilot: Updated todo list
+
+Stimmt, meine Funktionsliste war unvollständig: `cosf()` ist die `float`-Variante aus `math.h`. Ich prüfe nun alle C99-Varianten der Mathematikfunktionen sowie `murks_func001.c` direkt und liefere die korrigierte Trefferliste.
+
+Ran terminal command: Select-String -Path '.\Logical\GrosserMurks\GrosserMurks\murks_func001.c' -Pattern 'cosf\s*\(|#\s*include' | Select-Object Path,LineNumber,Line | Format-Table -Wrap | Out-String -Width 240
+
+Ran terminal command: $base = 'acos|acosh|asin|asinh|atan|atan2|atanh|cbrt|ceil|copysign|cos|cosh|erf|erfc|exp|exp2|expm1|fabs|fdim|floor|fma|fmax|fmin|fmod|frexp|hypot|ilogb|ldexp|lgamma|llrint|llround|log|log10|log1p|log2|logb|lrint|lround|modf|nan|nearbyint|nextafter|nexttoward|pow|remainder|remquo|rint|round|scalbln|scalbn|sin|sinh|sqrt|tan|tanh|tgamma|trunc'; $mathFunctions = "(?:$base)(?:f|l)?"; Get-ChildItem -Path '.\Logical\GrosserMurks' -File -Recurse -Filter '*.c' | ForEach-Object { $content = Get-Content -Raw $_.FullName; $calls = [regex]::Matches($content, "(?m)\b($mathFunctions)\s*\(") | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique; if ($calls.Count -gt 0 -and $content -notmatch '(?m)^\s*#\s*include\s*[<"]math\.h[>"]') { [PSCustomObject]@{File=$_.FullName; Functions=$calls -join ', '} } } | Format-Table -Wrap -AutoSize | Out-String -Width 240
+
+Der Gegencheck zeigt: `murks_func001.c` verwendet tatsächlich `cosf()`, enthält aber bereits `#include <math.h>` in Zeile 4 und ist deshalb kein fehlender-Include-Fall. Die erweiterte Suche findet zwei tatsächliche Kandidaten; ich ermittle noch die jeweiligen Aufrufzeilen für die präzise Liste.
+
+Ran terminal command: $files = @('.\Logical\GrosserMurks\GrosserMurks\murks_func067.c', '.\Logical\GrosserMurks\GrosserMurks\murks_func080.c'); Select-String -Path $files -Pattern '\b(expf|tanf)\s*\(' | Select-Object Path,LineNumber,Line | Format-Table -Wrap | Out-String -Width 240
+
+Korrektur: `cosf()` in `murks_func001.c:20` wird verwendet, aber `math.h` ist dort bereits in `murks_func001.c:4` eingebunden.
+
+Die C-Dateien mit Math-Funktionen und fehlendem `#include <math.h>` sind:
+
+- `murks_func067.c:22`: `expf()`
+- `murks_func080.c:19`: `tanf()`
+
+Beide deklarieren die Funktionen lokal, statt `math.h` einzubinden.
+
+Created 3 todos
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Updated todo list
+
+Ich prüfe die beiden lokalen Deklarationen und den aktuellen Build-Status. Die naheliegende Erklärung ist: Die Funktionen werden explizit, wenn auch mit falschem Rückgabetyp, deklariert; damit sieht der Compiler keinen fehlenden Prototyp und muss keinen Fehler ausgeben.
+
+
+
+Ran terminal command: Get-Content '.\Logical\GrosserMurks\GrosserMurks\murks_func067.c' | Select-Object -First 28 | ForEach-Object -Begin {$line=0} -Process {$line++; '{0,3}: {1}' -f $line, $_}
+
+Ran terminal command: Get-Content '.\Logical\GrosserMurks\GrosserMurks\murks_func080.c' | Select-Object -First 25 | ForEach-Object -Begin {$line=0} -Process {$line++; '{0,3}: {1}' -f $line, $_}
+
+Ran terminal command: Get-ChildItem -Path '.\Logical\GrosserMurks\GrosserMurks' -File -Filter '*.c' | Where-Object { (Get-Content -Raw $_.FullName) -match '(?m)^\s*(?:int|float|double|long\s+double)\s+(?:acos|asin|atan|ceil|cos|exp|fabs|floor|log|pow|sin|sqrt|tan)(?:f|l)?\s*\(' } | Select-Object -ExpandProperty Name | Out-String
+
+Kein Compilerfehler, weil beide Dateien die Funktionen vor dem Aufruf selbst deklarieren:
+
+- `murks_func067.c:18`: `int expf(float);`
+- `murks_func080.c:15`: `int tanf(float);`
+
+Damit ist für den Compiler kein Funktionsaufruf ohne Deklaration vorhanden. Ob die Deklaration zur tatsächlichen Library-Funktion passt, kann er ohne `#include <math.h>` nicht wissen. Der Linker prüft üblicherweise nur den Symbolnamen, nicht den Rückgabetyp.
+
+Die Deklarationen sind allerdings falsch. `math.h` deklariert beide als:
+
+```c
+float expf(float);
+float tanf(float);
+```
+
+Das ist besonders kritisch, da Rückgabewerte je nach Ziel-ABI in anderen Registern liegen können. `#include <math.h>` hätte die inkompatible lokale Deklaration sichtbar gemacht; als Compilerfehler oder mindestens Warnung, abhängig von den aktivierten Warnstufen.

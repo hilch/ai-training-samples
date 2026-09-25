@@ -1,0 +1,142 @@
+User: das Programm 'Murks' enthält viele C-Funktionen in 'Cyclic.c'.
+- erstelle eine separate *.c- Datei für jede einzelne Funktion
+- der Name der *.c- Datei soll dem Namen der jeweiligen Funktion entsprechen, aber entferne den Prefix 'murks_'
+- stelle sicher, dass die Kommentare vor jeder Funktion in die richtige *.c- Datei kommen.
+- stelle sicher, dass sich das Projekt anschließend wieder kompilieren lässt.
+
+GitHub Copilot: Updated todo list
+
+Ran terminal command: Get-ChildItem "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks" -Recurse
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\ANSIC.prg"
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\Local.h"
+
+100 functions named murks_func001..murks_func100. New files will be func001.c ... func100.c. Let's view Cyclic.c fully to split properly. 
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\Cyclic.c" -TotalCount 80
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\Cyclic.c" | Select-Object -Skip 100 -First 60
+
+Ran terminal command: $content = Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\Cyclic.c" -Raw
+$content.Length
+($content -split "murks_func\d{3}\(void\)" ).Count
+
+Created 
+
+Ran terminal command: Remove-Item "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Temp\split_cyclic.ps1" -Force
+
+Created 
+
+Ran terminal command: powershell -ExecutionPolicy Bypass -File "c:\Users\DECHHIL\AppData\Local\Temp\split_cyclic.ps1"
+
+Verify results: 
+
+Ran terminal command: Get-ChildItem "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks" -Filter "func*.c" | Measure-Object
+Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\Cyclic.c"
+Write-Host "---func001---"
+Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\func001.c"
+Write-Host "---func100---"
+Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\func100.c"
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\Cyclic.c"
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\func001.c"
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\func002.c" | Select-Object -First 10
+
+Good, only func001.c has the extra merged section header. Fix that one file: 
+
+Replacing 6 lines with 4 lines in 
+
+
+```
+
+```
+
+
+Created 4 todos
+
+Ran terminal command: Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\func001.c"
+Write-Host "===LINECOUNT==="
+(Get-Content "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks\func001.c").Count
+
+Ran terminal command: Get-ChildItem "c:\Projects\github\ai-training-repos\as-projects" -ErrorAction SilentlyContinue
+$dir = "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks"
+Get-ChildItem $dir -Filter "func*.c" | ForEach-Object {
+    $lines = (Get-Content $_.FullName).Count
+    $braceOpen = ([regex]::Matches((Get-Content $_.FullName -Raw), '\{')).Count
+    $braceClose = ([regex]::Matches((Get-Content $_.FullName -Raw), '\}')).Count
+    [PSCustomObject]@{Name=$_.Name; Lines=$lines; Open=$braceOpen; Close=$braceClose; Balanced=($braceOpen -eq $braceClose)}
+} | Where-Object { -not $_.Balanced -or $_.Lines -lt 8 } 
+Completed with input: Get-ChildItem "c:\Projects\github\ai-training-repos\as-projects" -ErrorAction SilentlyContinue
+$dir = "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks"
+Get-ChildItem $dir -Filter "func*.c" | ForEach-Object {
+    $lines = (Get-Content $_.FullName).Count
+    $braceOpen = ([regex]::Matches((Get-Content $_.FullName -Raw), '\{')).Count
+    $braceClose = ([regex]::Matches((Get-Content $_.FullName -Raw), '\}')).Count
+    [PSCustomObject]@{Name=$_.Name; Lines=$lines; Open=$braceOpen; Close=$braceClose; Balanced=($braceOpen -eq $braceClose)}
+} | Where-Object { -not $_.Balanced -or $_.Lines -lt 8 } 
+
+Ran terminal command: $dir = "c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks"
+Get-ChildItem $dir -Filter "func*.c" | ForEach-Object {
+    $lines = (Get-Content $_.FullName).Count
+    $braceOpen = ([regex]::Matches((Get-Content $_.FullName -Raw), '\{')).Count
+    $braceClose = ([regex]::Matches((Get-Content $_.FullName -Raw), '\}')).Count
+    [PSCustomObject]@{Name=$_.Name; Lines=$lines; Open=$braceOpen; Close=$braceClose; Balanced=($braceOpen -eq $braceClose)}
+} | Where-Object { -not $_.Balanced -or $_.Lines -lt 8 }
+Write-Host "check complete"
+
+Ran terminal command: powershell -NoProfile -Command "$dir='c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks'; Get-ChildItem $dir -Filter 'func*.c' | ForEach-Object { $c = Get-Content $_.FullName -Raw; $o=([regex]::Matches($c,'\{')).Count; $cl=([regex]::Matches($c,'\}')).Count; [PSCustomObject]@{Name=$_.Name;Open=$o;Close=$cl;Lines=(Get-Content $_.FullName).Count} } | Where-Object { $_.Open -ne $_.Close -or $_.Lines -lt 8 }; Write-Host DONE"
+Completed with input: powershell -NoProfile -Command "$dir='c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks'; Get-ChildItem $dir -Filter 'func*.c' | ForEach-Object { $c = Get-Content $_.FullName -Raw; $o=([regex]::Matches($c,'\{')).Count; $cl=([regex]::Matches($c,'\}')).Count; [PSCustomObject]@{Name=$_.Name;Open=$o;Close=$cl;Lines=(Get-Content $_.FullName).Count} } | Where-Object { $_.Open -ne $_.Close -or $_.Lines -lt 8 }; Write-Host DONE"
+
+Ran terminal command: $dir='c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks'
+$results = Get-ChildItem $dir -Filter 'func*.c' | ForEach-Object {
+    $c = Get-Content $_.FullName -Raw
+    $o = ([regex]::Matches($c,'\{')).Count
+    $cl = ([regex]::Matches($c,'\}')).Count
+    [PSCustomObject]@{Name=$_.Name; Open=$o; Close=$cl; Lines=(Get-Content $_.FullName).Count}
+}
+$results | Where-Object { $_.Open -ne $_.Close -or $_.Lines -lt 8 }
+"DONE, total files: $($results.Count)"
+
+Ran terminal command: Write-Host "hello test"
+
+That works fine now. Let me retry the brace-balance check as a single-line command. 
+
+Ran terminal command: $dir='c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks'; $results = Get-ChildItem $dir -Filter 'func*.c' | ForEach-Object { $c = Get-Content $_.FullName -Raw; $o = ([regex]::Matches($c,'\{')).Count; $cl = ([regex]::Matches($c,'\}')).Count; [PSCustomObject]@{Name=$_.Name; Open=$o; Close=$cl; Lines=(Get-Content $_.FullName).Count} }; $results | Where-Object { $_.Open -ne $_.Close -or $_.Lines -lt 8 }; "DONE total=$($results.Count)"
+
+All 100 files are balanced and complete. Now update `ANSIC.prg` to register the new files and remove the temp script. 
+
+Ran terminal command: $dir='c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks'; (Get-ChildItem $dir -Filter 'func*.c' | Sort-Object Name | Select-Object -ExpandProperty Name) -join "`n"
+
+Ran terminal command: $dir='c:\Projects\github\ai-training-samples\as-projects\refactor\refactor\Logical\Murks\Murks'; $files = Get-ChildItem $dir -Filter 'func*.c' | Sort-Object Name | Select-Object -ExpandProperty Name; $lines = $files | ForEach-Object { "    <File>$_</File>" }; $xml = $lines -join "`r`n"; Set-Content -Path "c:\Users\DECHHIL\AppData\Local\Temp\funcfiles.txt" -Value $xml -Encoding utf8; Get-Content "c:\Users\DECHHIL\AppData\Local\Temp\funcfiles.txt" | Select-Object -First 5
+
+Read memory
+
+Ran terminal command: Get-Content "c:\Users\DECHHIL\AppData\Local\Temp\funcfiles.txt" -Raw
+
+Replacing 2 lines with 102 lines in 
+
+
+```
+
+```
+Now clean up the temp helper files and build the project. 
+
+Ran terminal command: Remove-Item "c:\Users\DECHHIL\AppData\Local\Temp\split_cyclic.ps1", "c:\Users\DECHHIL\AppData\Local\Temp\funcfiles.txt" -Force -ErrorAction SilentlyContinue; "cleanup done"
+
+
+
+`AS: Build` task finished
+
+Build succeeded with 0 errors (warnings/security risks are pre-existing, unrelated to this refactor). The split is complete:
+
+- **Cyclic.c** now only contains the `#include "Local.h"` and the `MurksCYCLIC` entry point.
+- Each `murks_funcNNN` was moved to its own file `funcNNN.c` (prefix `murks_` stripped from the filename only, function names unchanged since `Local.h` still declares `murks_funcNNN`), each with its original preceding comment block and its own `#include "Local.h"`.
+- `ANSIC.prg` updated to register all 100 new files.
+- Project builds successfully (0 errors).
+
+Completed: *Create separate .c files for each function* (1/4)
+
+Made changes.
